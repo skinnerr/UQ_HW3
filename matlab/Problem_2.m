@@ -2,38 +2,65 @@ function [] = Problem_2()
 
 Set_Default_Plot_Properties();
 
+% Solution domain.
+Nx = 101;
+x0 = 0;
+xf = 1;
+x = linspace(x0, xf, Nx)';
+
 %%%
 % Latin Hypercube Sampling (LHS)
 %%%
 
-N = 2.^(0:5);
+Ncoll = 2.^(0:5);
 
-m =   nan(1,length(N));
-v =   nan(1,length(N));
-mxp5 = nan(1,length(N));
+m = nan(Nx,length(Ncoll));
+v = nan(Nx,length(Ncoll));
 
-for i = 1:length(N)
-    fprintf('Sampling LHS: %2i points\n', N(i)^2);
-    [m(i), v(i), mxp5(i)] = Sample_LHS(N(i));
+for i = 1:length(Ncoll)
+    fprintf('Sampling LHS: %2i points\n', Ncoll(i)^2);
+    [m(:,i), v(:,i)] = Sample_LHS(Ncoll(i));
 end
-
-N = N.^2;
 
 % Plots.
 
 figure();
 
+for i = 1:length(Ncoll)
+
+    dn = sprintf('%i',Ncoll(i)^2);
+
+    subplot(2,1,1);
+    hold on;
+    if i == length(Ncoll)
+        plot(x,m(:,i),'k--','DisplayName',dn);
+    else
+        plot(x,m(:,i),'DisplayName',dn);
+    end
+
+    subplot(2,1,2);
+    hold on;
+    if i == length(Ncoll)
+        plot(x,v(:,i),'k--','DisplayName',dn);
+    else
+        plot(x,v(:,i),'DisplayName',dn);
+    end
+    
+end
+
 subplot(2,1,1);
-plot(N,m,'b-o');
-set(gca,'XScale','log');
 ylabel('Mean');
-xlabel('N');
+xlabel('x');
+hleg = legend('show');
+set(hleg,'Location','EastOutside');
 
 subplot(2,1,2);
-plot(N,v,'r-o');
-set(gca,'XScale','log');
 ylabel('Variance');
-xlabel('N');
+xlabel('x');
+hleg = legend('show');
+set(hleg,'Location','EastOutside');
+
+return
 
 %%%
 % Clenshaw-Curtis (CC) tensor-product grid
