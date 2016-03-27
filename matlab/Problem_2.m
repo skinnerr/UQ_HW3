@@ -22,6 +22,10 @@ for i = 1:length(Ncoll)
     [m(:,i), v(:,i)] = Sample_LHS(Ncoll(i));
 end
 
+mxp5_LHS = m(51,:);
+vxp5_LHS = v(51,:);
+n_LHS = Ncoll;
+
 % Plots.
 
 figure();
@@ -75,6 +79,12 @@ for i = 1:length(level)
     [m(:,i), v(:,i), Ncoll(i)] = Sample_CC_dense(level(i));
 end
 
+mxp5_CCd = m(51,:);
+vxp5_CCd = v(51,:);
+n_CCd = Ncoll;
+
+% Plots.
+
 figure();
 
 for i = 1:length(level)
@@ -115,7 +125,7 @@ set(hleg,'Location','EastOutside');
 % Clenshaw-Curtis (CC) Smolyak sparse grid
 %%%
 
-level = 0:5;
+level = 0:7;
 
 Ncoll = nan(1,length(level));
 m = nan(Nx,length(Ncoll));
@@ -125,6 +135,13 @@ for i = 1:length(level)
     fprintf('Sampling CC (sparse): level %1i\n', level(i));
     [m(:,i), v(:,i), Ncoll(i)] = Sample_CC_sparse(level(i));
 end
+
+mxp5_CCs = m(51,:);
+vxp5_CCs = v(51,:);
+n_CCs = Ncoll;
+
+true_m = m(51,end);
+true_v = v(51,end);
 
 % Plots.
 
@@ -164,38 +181,102 @@ xlabel('x');
 hleg = legend('show');
 set(hleg,'Location','EastOutside');
 
-return
-
 %%%
 % Monte Carlo
 %%%
 
-N = 2.^(2:10);
+Ncoll = 2.^(4:10);
 
-m =   nan(1,length(N));
-v =   nan(1,length(N));
-mxp5 = nan(1,length(N));
+m = nan(Nx,length(Ncoll));
+v = nan(Nx,length(Ncoll));
 
-for i = 1:length(N)
-    fprintf('Sampling MC: %2i points\n', N(i));
-    [m(i), v(i), mxp5(i)] = Sample_MC(N(i));
+for i = 1:length(Ncoll)
+    fprintf('Sampling MC: %2i points\n', Ncoll(i));
+    [m(:,i), v(:,i)] = Sample_MC(Ncoll(i));
 end
+
+mxp5_MCS = m(51,:);
+vxp5_MCS = v(51,:);
+n_MCS = Ncoll;
 
 % Plots.
 
 figure();
 
+for i = 1:length(Ncoll)
+
+    dn = sprintf('%i',Ncoll(i));
+
+    subplot(2,1,1);
+    hold on;
+    if i == length(Ncoll)
+        plot(x,m(:,i),'k--','DisplayName',dn);
+    else
+        plot(x,m(:,i),'DisplayName',dn);
+    end
+
+    subplot(2,1,2);
+    hold on;
+    if i == length(Ncoll)
+        plot(x,v(:,i),'k--','DisplayName',dn);
+    else
+        plot(x,v(:,i),'DisplayName',dn);
+    end
+    
+end
+
 subplot(2,1,1);
-plot(N,m,'b-o');
-set(gca,'XScale','log');
 ylabel('Mean');
-xlabel('N');
+xlabel('x');
+hleg = legend('show');
+set(hleg,'Location','EastOutside');
 
 subplot(2,1,2);
-plot(N,v,'r-o');
-set(gca,'XScale','log');
 ylabel('Variance');
+xlabel('x');
+hleg = legend('show');
+set(hleg,'Location','EastOutside');
+
+%%%
+% Plot comparisons of convergence in the mean and variance at x = 0.5.
+%%%
+
+figure();
+hold on;
+plot(n_LHS, abs(mxp5_LHS - true_m) / abs(true_m), '-o', 'DisplayName', 'LHS');
+plot(n_CCd, abs(mxp5_CCd - true_m) / abs(true_m), '-o', 'DisplayName', 'CC (dense)');
+plot(n_CCs, abs(mxp5_CCs - true_m) / abs(true_m), '-o', 'DisplayName', 'CC (sparse)');
+plot(n_MCS, abs(mxp5_MCS - true_m) / abs(true_m), '-o', 'DisplayName', 'MC');
 xlabel('N');
+ylabel('Rel. Err. in Mean');
+set(gca,'XScale','log');
+set(gca,'YScale','log');
+hleg = legend('show');
+set(hleg,'Location','EastOutside');
+
+figure();
+hold on;
+plot(n_LHS, abs(vxp5_LHS - true_v) / abs(true_v), '-o', 'DisplayName', 'LHS');
+plot(n_CCd, abs(vxp5_CCd - true_v) / abs(true_v), '-o', 'DisplayName', 'CC (dense)');
+plot(n_CCs, abs(vxp5_CCs - true_v) / abs(true_v), '-o', 'DisplayName', 'CC (sparse)');
+plot(n_MCS, abs(vxp5_MCS - true_v) / abs(true_v), '-o', 'DisplayName', 'MC');
+xlabel('N');
+ylabel('Rel. Err. in Variance');
+set(gca,'XScale','log');
+set(gca,'YScale','log');
+hleg = legend('show');
+set(hleg,'Location','EastOutside');
+
+
 
 end
+
+
+
+
+
+
+
+
+
 
