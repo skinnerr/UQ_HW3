@@ -81,7 +81,7 @@ C_{KK}(x_1,x_2) = \exp \left( \frac{- | x_1-x_2 | }{\ell} \right), \qquad (x1,x2
 Moreover, $\{y_i\}$ are i.i.d. $U(-1,1)$. We would like to compute the statistics of the temperature field by solving the governing steady-state stochastic heat equation
 \begin{equation}
 \begin{aligned}
-\pp{}{x} \left( K(x,\omega) \pp{u(x,\omega)}{x} \right) &= 1.0, \qquad x \in (0,1), \\
+\pp{}{x} \left( K(x,\omega) \pp{u(x,\omega)}{x} \right) &= 1.0, \qquad x \in \mathc{D}, \\
 u(0,\omega) &= 0, \\
 u(1,\omega) &= 0,
 \end{aligned}
@@ -92,9 +92,9 @@ Setting $\ell = 2.0$, use the Homework \#1 code to compute the eigen-pairs $\{ \
 
 \begin{enumerate}
 
-\item Compute $\xpect{u(X)}$ and $\var(u(x))$ of $u(x,\omega)$ using Latin Hypercube Sampling (LHS), with samples generated using your own code. Verify convergence of the mean and variance as you draw more samples.
+\item Compute $\xpect{u(x)}$ and $\var(u(x))$ of $u(x,\omega)$ using Latin Hypercube Sampling (LHS), with samples generated using your own code. Verify convergence of the mean and variance as you draw more samples.
 
-\item Compute the same mean and variance using stochastic collocation with a tensor-product grid of the Clenshaw-Curtis rule. You can use the Matlab function \lstinline|spquad.m|, available on our course webpage, to obtain the abscissas and weights of the CC quadrature rule in dimension $d=1$. To obtain a reference solution for these comparisons, use $N=33$ quadrature points along each direction to compute the solution mean and variance. Verify convergence by increasing the number of quadrature points at $N = 1, 2, 4, 8, 16, 32$.
+\item Compute the same mean and variance using stochastic collocation with a tensor-product grid of the Clenshaw-Curtis rule. You can use the Matlab function \lstinline|spquad.m|, available on our course webpage, to obtain the abscissas and weights of the CC quadrature rule in dimension $d=1$. To obtain a reference solution for these comparisons, use $N=33$ quadrature points along each direction to compute the solution mean and variance. Verify convergence by increasing the number of quadrature points at $N = 1, 4, 16, 32$.
 
 \item Compute the mean and variance using stochastic collocation of a Smolyak sparse grid with CC abscissas. Verify convergence in the manner discussed above.
 
