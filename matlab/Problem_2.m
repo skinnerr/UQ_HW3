@@ -60,39 +60,56 @@ xlabel('x');
 hleg = legend('show');
 set(hleg,'Location','EastOutside');
 
-return
-
 %%%
 % Clenshaw-Curtis (CC) tensor-product grid
 %%%
 
 level = 0:5;
 
-m =   nan(1,length(level));
-v =   nan(1,length(level));
-mxp5 = nan(1,length(level));
-N =   nan(1,length(level));
+Ncoll = nan(1,length(level));
+m = nan(Nx,length(Ncoll));
+v = nan(Nx,length(Ncoll));
 
 for i = 1:length(level)
     fprintf('Sampling CC (dense): level %1i\n', level(i));
-    [m(i), v(i), mxp5(i), N(i)] = Sample_CC_dense(level(i));
+    [m(:,i), v(:,i), Ncoll(i)] = Sample_CC_dense(level(i));
 end
-
-% Plots.
 
 figure();
 
+for i = 1:length(level)
+
+    dn = sprintf('%i',Ncoll(i));
+
+    subplot(2,1,1);
+    hold on;
+    if i == length(level)
+        plot(x,m(:,i),'k--','DisplayName',dn);
+    else
+        plot(x,m(:,i),'DisplayName',dn);
+    end
+
+    subplot(2,1,2);
+    hold on;
+    if i == length(level)
+        plot(x,v(:,i),'k--','DisplayName',dn);
+    else
+        plot(x,v(:,i),'DisplayName',dn);
+    end
+    
+end
+
 subplot(2,1,1);
-plot(N,m,'b-o');
-set(gca,'XScale','log');
 ylabel('Mean');
-xlabel('N');
+xlabel('x');
+hleg = legend('show');
+set(hleg,'Location','EastOutside');
 
 subplot(2,1,2);
-plot(N,v,'r-o');
-set(gca,'XScale','log');
 ylabel('Variance');
-xlabel('N');
+xlabel('x');
+hleg = legend('show');
+set(hleg,'Location','EastOutside');
 
 %%%
 % Clenshaw-Curtis (CC) Smolyak sparse grid
@@ -100,31 +117,54 @@ xlabel('N');
 
 level = 0:5;
 
-m =   nan(1,length(level));
-v =   nan(1,length(level));
-mxp5 = nan(1,length(level));
-N =   nan(1,length(level));
+Ncoll = nan(1,length(level));
+m = nan(Nx,length(Ncoll));
+v = nan(Nx,length(Ncoll));
 
 for i = 1:length(level)
     fprintf('Sampling CC (sparse): level %1i\n', level(i));
-    [m(i), v(i), mxp5(i), N(i)] = Sample_CC_sparse(level(i));
+    [m(:,i), v(:,i), Ncoll(i)] = Sample_CC_sparse(level(i));
 end
 
 % Plots.
 
 figure();
 
+for i = 1:length(level)
+
+    dn = sprintf('%i',Ncoll(i));
+
+    subplot(2,1,1);
+    hold on;
+    if i == length(level)
+        plot(x,m(:,i),'k--','DisplayName',dn);
+    else
+        plot(x,m(:,i),'DisplayName',dn);
+    end
+
+    subplot(2,1,2);
+    hold on;
+    if i == length(level)
+        plot(x,v(:,i),'k--','DisplayName',dn);
+    else
+        plot(x,v(:,i),'DisplayName',dn);
+    end
+    
+end
+
 subplot(2,1,1);
-plot(N,m,'b-o');
-set(gca,'XScale','log');
 ylabel('Mean');
-xlabel('N');
+xlabel('x');
+hleg = legend('show');
+set(hleg,'Location','EastOutside');
 
 subplot(2,1,2);
-plot(N,v,'r-o');
-set(gca,'XScale','log');
 ylabel('Variance');
-xlabel('N');
+xlabel('x');
+hleg = legend('show');
+set(hleg,'Location','EastOutside');
+
+return
 
 %%%
 % Monte Carlo
