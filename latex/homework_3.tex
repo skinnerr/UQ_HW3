@@ -52,7 +52,7 @@ With $q=4$ and $d=2$, the bounds of the sum in \eqref{eq:smolyak} are $3 \le |\m
 |\mb{l}| = 3: &\qquad \{ 0,3 \} \qquad \{ 1,2 \} \qquad \hphantom{\{ 2,2 \}} \qquad \{ 2,1 \} \qquad \{ 3,0 \} \\
 |\mb{l}| = 4: &\qquad \{ 0,4 \} \qquad \{ 1,3 \} \qquad \{ 2,2 \} \qquad \{ 3,1 \} \qquad \{ 4,0 \}
 \end{align*}
-Abscissas of the 1-D CC grids are computed with \lstinline|spquad|, and the tensor products resulting in the constituent 2-D grids are plotted in \figref{fig:prob1}.
+Abscissas of the 1-D CC grids are computed with \lstinline|spquad|, and the tensor-products resulting in the constituent 2-D grids are plotted in \figref{fig:prob1}.
 
 \begin{figure}[h]
 \centering
@@ -60,8 +60,6 @@ Abscissas of the 1-D CC grids are computed with \lstinline|spquad|, and the tens
 \caption{Constituent grids that make up $\mathc{A}(4,2)$. Titles of sub-plots contain levels $l_1$ and $l_2$ in parentheses, and the value of $(-1)^{q-|\mb{l}|}$ in square brackets.}
 \label{fig:prob1}
 \end{figure}
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,23 +102,53 @@ Setting $\ell = 2.0$, use the Homework \#1 code to compute the eigen-pairs $\{ \
 
 \end{enumerate}
 
+\subsection*{Solution}
 
-%\vspace{2in}
-%\begin{table}[h]
-%\centering
-%\begin{tabular}{ll}
-%\toprule
-%Quantity & Value \\
-%\midrule
-%$\xpect{u_\tmax}$ & 0.12568 \\
-%$\var(u_\tmax)$ & 0.03379 \\
-%$P(\cdot)$ & 1.59 \% \\
-%\bottomrule
-%\end{tabular}
-%\vspace{1em}
-%\caption{Relevant quantities in \eqref{eq:probability} computed from 250,000 realizations using 1,001 grid points.}
-%\label{tbl:probabilities}
-%\end{table}
+Convergence plots of the LHS, tensor-product CC, Smolyak sparse-grid CC, and MC sampling methods are show in Figures \ref{fig:prob2_lhs}, \ref{fig:prob2_dense}, \ref{fig:prob2_sparse}, and \ref{fig:prob2_mc}, respectively. All converge to nominally the same mean and variance as functions of position $x$. The number of collocation points used in each of these plots is shown in the legend.
+
+Relative error in the mean and variance of temperature at $x = 0.5$ as a function of sampling points for each method is presented in \figref{fig:prob2_xp5}. The $N^{-1/2}$ convergence of the MC method's mean is confirmed visually by comparison to the line of slope $-1/2$ on the log-log plot. A more rigorous confirmation of MC's convergence behavior in the mean could be carried out by computing the expectation of the sample mean's deviation from the true mean. This would require many experiments to be run for each value of $N$.
+
+Though the Smolyak sparse-grid formula is better than tensor-product grids, it does not solve the curse of dimensionality. For large dimension $d$, the Clenshaw-Curtis Smolyak sparse grid uses $N \approx (2d)^p/p!$ collocation points to integrate a polynomial of total order $p$ exactly. This is $\bigo(d^c)$, which is a major improvement over tensor-product grids' $\bigo(c^d)$ scaling, where $c$ is a constant. Thus it still takes a large amount of computational effort to do stochastic collocation when the correlation length is $\ell = 0.1$, because it requires $d = 11$ eigenpairs to capture the stochastic behavior with below 10\% MSE, as shown in Homework \#1. A grid of $\mathc{A}(q=6,d=11)$ contains 280,017 collocation points, so this problem is still computationally tractable, but it is still unclear exactly what levels $q$ are needed to accurately capture the mean and variance.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{prob2lhs.eps}
+\\[2ex]
+\caption{Latin hypercube sampling (LHS) estimates of $\xpect{u(x)}$ and $\var(u(x))$ for a number $N$ of samples.}
+\label{fig:prob2_lhs}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{prob2ccdense.eps}
+\\[2ex]
+\caption{Dense CC tensor-product estimates of $\xpect{u(x)}$ and $\var(u(x))$ for a number $N$ of samples.}
+\label{fig:prob2_dense}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{prob2ccsparse.eps}
+\\[2ex]
+\caption{CC Smolyak sparse-grid estimates of $\xpect{u(x)}$ and $\var(u(x))$ for a number $N$ of samples.}
+\label{fig:prob2_sparse}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{prob2mc.eps}
+\\[2ex]
+\caption{Monte Carlo estimates of $\xpect{u(x)}$ and $\var(u(x))$ for a number $N$ of samples.}
+\label{fig:prob2_mc}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{prob2xp5.eps}
+\\[2ex]
+\caption{Relative error in the mean and variance of different sampling techniques as a function of number $N$ of sampling points. Monte Carlo is seen to converge at a rate of approximately $1/\sqrt{N}$ in the mean, based on the slope of (MC) and (1/sqrt(N)). Reference ``truth'' values of the mean and variance are obtained with sparse CC sampling using 705 points in 2-D.}
+\label{fig:prob2_xp5}
+\end{figure}
 
 %%
 %% DOCUMENT END

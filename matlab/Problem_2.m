@@ -24,7 +24,7 @@ end
 
 mxp5_LHS = m(51,:);
 vxp5_LHS = v(51,:);
-n_LHS = Ncoll;
+n_LHS = Ncoll.^2;
 
 % Plots.
 
@@ -54,7 +54,7 @@ end
 
 subplot(2,1,1);
 ylabel('Mean');
-xlabel('x');
+title('LHS');
 hleg = legend('show');
 set(hleg,'Location','EastOutside');
 
@@ -111,7 +111,7 @@ end
 
 subplot(2,1,1);
 ylabel('Mean');
-xlabel('x');
+title('CC (dense)');
 hleg = legend('show');
 set(hleg,'Location','EastOutside');
 
@@ -171,7 +171,7 @@ end
 
 subplot(2,1,1);
 ylabel('Mean');
-xlabel('x');
+title('CC (sparse)');
 hleg = legend('show');
 set(hleg,'Location','EastOutside');
 
@@ -227,7 +227,7 @@ end
 
 subplot(2,1,1);
 ylabel('Mean');
-xlabel('x');
+title('MC');
 hleg = legend('show');
 set(hleg,'Location','EastOutside');
 
@@ -241,12 +241,19 @@ set(hleg,'Location','EastOutside');
 % Plot comparisons of convergence in the mean and variance at x = 0.5.
 %%%
 
+mc_bound_x = logspace(0, log10(1024), 100);
+mc_bound_y = 1 ./ sqrt(mc_bound_x);
+
 figure();
+
+subplot(2,1,1);
 hold on;
 plot(n_LHS, abs(mxp5_LHS - true_m) / abs(true_m), '-o', 'DisplayName', 'LHS');
 plot(n_CCd, abs(mxp5_CCd - true_m) / abs(true_m), '-o', 'DisplayName', 'CC (dense)');
 plot(n_CCs, abs(mxp5_CCs - true_m) / abs(true_m), '-o', 'DisplayName', 'CC (sparse)');
 plot(n_MCS, abs(mxp5_MCS - true_m) / abs(true_m), '-o', 'DisplayName', 'MC');
+plot(mc_bound_x,mc_bound_y, 'DisplayName', '1/sqrt(N)');
+xlim([1,1500]);
 xlabel('N');
 ylabel('Rel. Err. in Mean');
 set(gca,'XScale','log');
@@ -254,12 +261,13 @@ set(gca,'YScale','log');
 hleg = legend('show');
 set(hleg,'Location','EastOutside');
 
-figure();
+subplot(2,1,2);
 hold on;
 plot(n_LHS, abs(vxp5_LHS - true_v) / abs(true_v), '-o', 'DisplayName', 'LHS');
 plot(n_CCd, abs(vxp5_CCd - true_v) / abs(true_v), '-o', 'DisplayName', 'CC (dense)');
 plot(n_CCs, abs(vxp5_CCs - true_v) / abs(true_v), '-o', 'DisplayName', 'CC (sparse)');
 plot(n_MCS, abs(vxp5_MCS - true_v) / abs(true_v), '-o', 'DisplayName', 'MC');
+xlim([1,1500]);
 xlabel('N');
 ylabel('Rel. Err. in Variance');
 set(gca,'XScale','log');
@@ -267,16 +275,5 @@ set(gca,'YScale','log');
 hleg = legend('show');
 set(hleg,'Location','EastOutside');
 
-
-
 end
-
-
-
-
-
-
-
-
-
 
