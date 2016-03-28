@@ -22,7 +22,7 @@
 \rfoot{\hrule Ryan Skinner}
 
 \noindent
-{\Large Homework 2}
+{\Large Homework 3}
 \hfill
 {\large Ryan Skinner}
 \\[0.5ex]
@@ -54,7 +54,7 @@ With $q=4$ and $d=2$, the bounds of the sum in \eqref{eq:smolyak} are $3 \le |\m
 \end{align*}
 Abscissas of the 1-D CC grids are computed with \lstinline|spquad|, and the tensor-products resulting in the constituent 2-D grids are plotted in \figref{fig:prob1}.
 
-According to Burkardt\footnote{\url{http://people.sc.fsu.edu/~jburkardt/presentations/sandia_2009.pdf}}, the Clenshaw-Curtis Smolyak formula of level $q$ is precise for all polynomials of degree $2q+1$ or less. Thus our grid with $q=4$ is 9\th-order accurate, a result which is independent of the dimension $d$.
+According to Burkardt\footnote{\url{http://people.sc.fsu.edu/~jburkardt/presentations/sandia_2009.pdf}}, the Clenshaw-Curtis Smolyak formula of level $q$ is precise for all polynomials of degree $2q+1$ or less. Thus our grid with $q=4$ is 9\th-order accurate, a result which is independent of the dimension $d$ (though increasing $d$ does increase the number of collocation points required).
 
 \begin{figure}[h]
 \centering
@@ -108,9 +108,9 @@ Setting $\ell = 2.0$, use the Homework \#1 code to compute the eigen-pairs $\{ \
 
 Convergence plots of the LHS, tensor-product CC, Smolyak sparse-grid CC, and MC sampling methods are show in Figures \ref{fig:prob2_lhs}, \ref{fig:prob2_dense}, \ref{fig:prob2_sparse}, and \ref{fig:prob2_mc}, respectively. All converge to nominally the same mean and variance as functions of position $x$. The number of collocation points used in each of these plots is shown in the legend.
 
-Relative error in the mean and variance of temperature at $x = 0.5$ as a function of sampling points for each method is presented in \figref{fig:prob2_xp5}. The $N^{-1/2}$ convergence of the MC method's mean is confirmed visually by comparison to the line of slope $-1/2$ on the log-log plot. A more rigorous confirmation of MC's convergence behavior in the mean could be carried out by computing the expectation of the sample mean's deviation from the true mean. This would require many experiments to be run for each value of $N$.
+Relative error in the mean and variance of temperature at $x = 0.5$ as a function of sampling points for each method is presented in \figref{fig:prob2_xp5}. The $N^{-1/2}$ convergence of the MC method's mean is confirmed visually by comparison to the line of slope $-1/2$ plotted on a log-log scale. A more rigorous confirmation of MC's convergence behavior in the mean could be carried out by computing the expectation of the sample mean's deviation from the true mean. This would require many experiments to be run for each value of $N$.
 
-Though the Smolyak sparse-grid formula is better than tensor-product grids, it does not solve the curse of dimensionality. For large dimension $d$, the Clenshaw-Curtis Smolyak sparse grid uses $N \approx (2d)^p/p!$ collocation points to integrate a polynomial of total order $p$ exactly. This is $\bigo(d^c)$, which is a major improvement over tensor-product grids' $\bigo(c^d)$ scaling, where $c$ is a constant. Thus it still takes a large amount of computational effort to do stochastic collocation when the correlation length is $\ell = 0.1$, because it requires $d = 11$ eigenpairs to capture the stochastic behavior with below 10\% MSE, as shown in Homework \#1. A grid of $\mathc{A}(q=6,d=11)$ contains 280,017 collocation points, so this problem is still computationally tractable, but it is still unclear exactly what levels $q$ are needed to accurately capture the mean and variance.
+Though the Smolyak sparse-grid formula is better than tensor-product grids, it does not solve the curse of dimensionality. For large dimension $d$, the Clenshaw-Curtis Smolyak sparse grid uses $N \approx (2d)^p/p!$ collocation points to integrate a polynomial of total order $p$ exactly. This is $\bigo(d^c)$, which is a major improvement over tensor-product grids' $\bigo(c^d)$ scaling, where $c$ is a constant. Thus it still takes a large amount of computational effort to do stochastic collocation when the correlation length is $\ell = 0.1$, because it requires $d = 11$ eigenpairs to capture the stochastic behavior with below 10\% MSE, as shown in Homework \#1. A grid of $\mathc{A}(q=6,d=11)$ contains 280,017 collocation points, so this problem is still computationally tractable, but it is unclear exactly what levels $q$ are needed to accurately capture the mean and variance.
 
 \begin{figure}[h]
 \centering
